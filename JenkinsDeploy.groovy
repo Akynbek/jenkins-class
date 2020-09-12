@@ -62,13 +62,13 @@ def slavePodTemplate = """
         }
 
         stage("destroy") {
-            if (!applyChanges) {
-                if (destroyChanges) {
+            if (!params.applyChanges) {
+                if (params.destroyChanges) {
                     println("Destroying everything")
                 } 
             } else {
-                println("Sorry I cannot destroy and apply!")
-              }
+                println("Sorry I cannot destroy and apply!!")
+            }
   
         }
 
