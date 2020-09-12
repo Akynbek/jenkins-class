@@ -60,5 +60,19 @@ def slavePodTemplate = """
                 sh 'kubectl version'
             }
         }
+
+        stage("destroy") {
+            if (!applyChanges) {
+                if (destroyChanges) {
+                    println("Destroying everything")
+                } 
+            } else {
+                println("Sorry I cannot destroy and apply!")
+              }
+  
+        }
+
+
+
       }
     }
