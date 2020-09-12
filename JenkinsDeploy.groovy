@@ -1,7 +1,5 @@
-
 // Uniq name for the pod or slave 
 def k8slabel = "jenkins-pipeline-${UUID.randomUUID().toString()}"
-
 properties([
     [$class: 'RebuildSettings', autoRebuild: false, rebuildDisabled: false], 
     parameters([
@@ -11,12 +9,7 @@ properties([
         choice(choices: ['dev', 'qa', 'stage', 'prod'], description: 'Please provide the environment to deploy ', name: 'environment')
         ])
         ])
-
-
-
-
-
-// Yaml def for slaves
+// yaml def for slaves 
 def slavePodTemplate = """
       metadata:
         labels:
@@ -35,7 +28,7 @@ def slavePodTemplate = """
                   - jenkins-jenkins-master
               topologyKey: "kubernetes.io/hostname"
         containers:
-       - name: fuchicorptools
+        - name: fuchicorptools
           image: fuchicorp/buildtools
           imagePullPolicy: Always
           command:
@@ -52,31 +45,13 @@ def slavePodTemplate = """
     """
     podTemplate(name: k8slabel, label: k8slabel, yaml: slavePodTemplate, showRawYaml: false) {
       node(k8slabel) {
-
-        stage("checkout SCM")  {
-            git 'https://github.com/Akynbek/jenkins-class.git'
+        stage("Pull the SCM") {
+            git 'https://github.com/akynbek/jenkins-class'
         }
-
-
         stage("Apply/Plan") {
             container("fuchicorptools") {
                 sh 'kubectl version'
             }
         }
-        stage("Terraform Check") {
-            container("terraform") {
-                sh 'terraform version'
-            }
-        }
       }
     }
-
-
-println(
-    """
-    Apply changes: ${params.applyChanges}
-    Destroy changes: ${params.destroyChanges}
-    Docker  image:  ${params.selectedDockerImage}
-    Environment: ${params.environment}
-    """
-)
