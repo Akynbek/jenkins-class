@@ -47,7 +47,7 @@ podTemplate(name: k8slabel, label: k8slabel, yaml: slavePodTemplate, showRawYaml
         node(k8slabel) {
             container("fuchicorptools") {
                 stage("Pull the SCM") {
-                    git 'https://github.com/fsadykov/jenkins-class'
+                    git 'https://github.com/akynbek/jenkins-class'
                 }
                 dir('deployments/k8s') {
                     stage("Apply/Plan") {
